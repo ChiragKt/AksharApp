@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // ── Akshar Palette ────────────────────────────────────────────────
+  // ── Akshar Palette (matte, no gradients) ─────────────────────────
   static const Color teal        = Color(0xFF5DD3B6);
   static const Color brown       = Color(0xFF6E5034);
   static const Color gold        = Color(0xFFCDB885);
@@ -18,29 +18,15 @@ class AppTheme {
   static const Color borderGold  = Color(0x60CDB885);
   static const Color error       = Color(0xFFD4614A);
 
-  static const LinearGradient accentGradient = LinearGradient(
-    colors: [teal, Color(0xFF3AA88D)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient goldGradient = LinearGradient(
-    colors: [Color(0xFFCDB885), Color(0xFFAA9060)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient cardGradient = LinearGradient(
-    colors: [Color(0xFF2A1C10), Color(0xFF1A1008)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient bgGradient = LinearGradient(
-    colors: [Color(0xFF1C1208), Color(0xFF100A04)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
+  // ── Flat matte replacements for all gradients ─────────────────────
+  // accentGradient  → flat teal
+  static const Color accentFlat  = teal;
+  // goldGradient    → flat gold
+  static const Color goldFlat    = gold;
+  // cardGradient    → flat bgCard
+  static const Color cardFlat    = bgCard;
+  // bgGradient      → flat bgDark
+  static const Color bgFlat      = bgDark;
 
   static ThemeData get theme => ThemeData(
         brightness: Brightness.dark,
