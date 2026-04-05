@@ -1,0 +1,37 @@
+name: akshar_app
+description: Traditional Indian Script Recognition — अक्षर
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Image picking — works on iOS, Android, and Web
+  image_picker: ^1.1.2
+
+  # ML Kit text recognition (Devanagari)
+  # NOTE: Not available on web — handled gracefully in code
+  google_mlkit_text_recognition: ^0.13.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+
+  fonts:
+    - family: TiroDevanagariHindi
+      fonts:
+        - asset: assets/fonts/TiroDevanagariHindi-Regular.ttf
+        - asset: assets/fonts/TiroDevanagariHindi-Italic.ttf
+          style: italic
