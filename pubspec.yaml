@@ -1,0 +1,52 @@
+name: akshar
+description: Akshar — Beautiful traditional digit and script recognition app
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  signature: ^5.4.0
+  tflite_flutter: ^0.10.4
+  image: ^4.1.7
+
+  google_mlkit_text_recognition: ^0.15.1
+  google_mlkit_digital_ink_recognition: ^0.14.0
+
+  image_picker: ^1.0.7
+  camera: ^0.10.5+9
+  permission_handler: ^11.3.0
+
+  flutter_animate: ^4.5.0
+  lottie: ^3.1.2
+
+  provider: ^6.1.2
+  vibration: ^1.8.4
+  flutter_svg: ^2.0.10+1
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/models/
+    - assets/images/
+
+  fonts:
+    - family: Tiro
+      fonts:
+        - asset: assets/fonts/TiroDevanagariHindi-Regular.ttf
+        - asset: assets/fonts/TiroDevanagariHindi-Italic.ttf
+          style: italic
