@@ -21,7 +21,7 @@ class TypeToggle extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              // Sliding indicator
+              // Sliding indicator — flat matte gold (was goldGradient)
               AnimatedAlign(
                 duration: const Duration(milliseconds: 280),
                 curve: Curves.easeInOut,
@@ -30,9 +30,8 @@ class TypeToggle extends StatelessWidget {
                   widthFactor: 0.5,
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: AppTheme.goldGradient,
+                      color: AppTheme.gold, // flat matte, no gradient
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [BoxShadow(color: AppTheme.gold.withValues(alpha: 0.25), blurRadius: 10, offset: const Offset(0, 3))],
                     ),
                   ),
                 ),
@@ -50,13 +49,15 @@ class TypeToggle extends StatelessWidget {
                           children: [
                             Icon(Icons.tag_rounded, size: 16, color: state.isDigitMode ? AppTheme.bgDark : AppTheme.textSub),
                             const SizedBox(width: 6),
-                            Text('अंक  Digit',
-                                style: TextStyle(
-                                  fontFamily: 'Tiro',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                  color: state.isDigitMode ? AppTheme.bgDark : AppTheme.textSub,
-                                )),
+                            Text(
+                              'Digit',
+                              style: TextStyle(
+                                fontFamily: 'Tiro',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                color: state.isDigitMode ? AppTheme.bgDark : AppTheme.textSub,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -72,13 +73,15 @@ class TypeToggle extends StatelessWidget {
                           children: [
                             Icon(Icons.text_fields_rounded, size: 16, color: !state.isDigitMode ? AppTheme.bgDark : AppTheme.textSub),
                             const SizedBox(width: 6),
-                            Text('अक्षर  Text',
-                                style: TextStyle(
-                                  fontFamily: 'Tiro',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                  color: !state.isDigitMode ? AppTheme.bgDark : AppTheme.textSub,
-                                )),
+                            Text(
+                              'Text',
+                              style: TextStyle(
+                                fontFamily: 'Tiro',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                color: !state.isDigitMode ? AppTheme.bgDark : AppTheme.textSub,
+                              ),
+                            ),
                           ],
                         ),
                       ),

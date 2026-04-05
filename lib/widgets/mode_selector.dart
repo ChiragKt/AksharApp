@@ -13,11 +13,11 @@ class ModeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _ModeTab(mode: RecognitionMode.draw,   icon: Icons.draw_rounded,         label: 'Likhna', devanagari: 'लिखें', selected: selected, onSelect: onSelect),
+        _ModeTab(mode: RecognitionMode.draw,   icon: Icons.draw_rounded,          label: 'Draw',    selected: selected, onSelect: onSelect),
         const SizedBox(width: 8),
-        _ModeTab(mode: RecognitionMode.camera, icon: Icons.camera_alt_rounded,   label: 'Camera', devanagari: 'कैमरा', selected: selected, onSelect: onSelect),
+        _ModeTab(mode: RecognitionMode.camera, icon: Icons.camera_alt_rounded,    label: 'Camera',  selected: selected, onSelect: onSelect),
         const SizedBox(width: 8),
-        _ModeTab(mode: RecognitionMode.image,  icon: Icons.photo_library_rounded, label: 'Chitra', devanagari: 'चित्र', selected: selected, onSelect: onSelect),
+        _ModeTab(mode: RecognitionMode.image,  icon: Icons.photo_library_rounded, label: 'Gallery', selected: selected, onSelect: onSelect),
       ],
     );
   }
@@ -27,13 +27,12 @@ class _ModeTab extends StatelessWidget {
   final RecognitionMode mode;
   final IconData icon;
   final String label;
-  final String devanagari;
   final RecognitionMode selected;
   final void Function(RecognitionMode) onSelect;
 
   const _ModeTab({
     required this.mode, required this.icon, required this.label,
-    required this.devanagari, required this.selected, required this.onSelect,
+    required this.selected, required this.onSelect,
   });
 
   bool get isSelected => selected == mode;
@@ -46,8 +45,9 @@ class _ModeTab extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 280),
           curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
+            // Flat matte — was gradient
             color: isSelected ? AppTheme.teal.withValues(alpha: 0.15) : AppTheme.bgSurface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
@@ -59,9 +59,16 @@ class _ModeTab extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 20, color: isSelected ? AppTheme.teal : AppTheme.textSub),
-              const SizedBox(height: 3),
-              Text(devanagari, style: TextStyle(fontFamily: 'Tiro', fontSize: 12, fontWeight: FontWeight.w600, color: isSelected ? AppTheme.teal : AppTheme.textSub)),
-              Text(label, style: TextStyle(fontSize: 9, color: isSelected ? AppTheme.teal.withValues(alpha: 0.8) : AppTheme.textSub.withValues(alpha: 0.6), letterSpacing: 0.5)),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontFamily: 'Tiro',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? AppTheme.teal : AppTheme.textSub,
+                ),
+              ),
             ],
           ),
         ),

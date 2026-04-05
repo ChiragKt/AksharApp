@@ -21,16 +21,29 @@ class _CameraScreenState extends State<CameraScreen> {
     final state = context.read<RecognitionState>();
     state.setProcessing();
     final path = await RecognitionService.instance.captureFromCamera();
-    if (path == null) { state.setError('Capture cancelled.'); return; }
+    if (path == null) {
+      state.setError('Capture cancelled.');
+      return;
+    }
     setState(() => _capturedPath = path);
     try {
-      final results = await RecognitionService.instance.recognizeFromImage(imagePath: path, isDigitMode: state.isDigitMode);
-      if (results.isEmpty) state.setError('कुछ नहीं मिला — Nothing found. Try again.');
-      else state.setResults(results);
-    } catch (e) { state.setError('Error: $e'); }
+      final results = await RecognitionService.instance.recognizeFromImage(
+        imagePath: path, isDigitMode: state.isDigitMode,
+      );
+      if (results.isEmpty) {
+        state.setError('Nothing found. Try again.');
+      } else {
+        state.setResults(results);
+      }
+    } catch (e) {
+      state.setError('Error: $e');
+    }
   }
 
-  void _reset(RecognitionState state) { setState(() => _capturedPath = null); state.clearAll(); }
+  void _reset(RecognitionState state) {
+    setState(() => _capturedPath = null);
+    state.clearAll();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +58,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    gradient: AppTheme.cardGradient,
+                    color: AppTheme.bgCard, // flat matte — was cardGradient
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: AppTheme.borderGold),
                   ),
@@ -55,10 +68,16 @@ class _CameraScreenState extends State<CameraScreen> {
                         ? Stack(fit: StackFit.expand, children: [
                             Image.file(File(_capturedPath!), fit: BoxFit.cover),
                             if (state.status == RecognitionStatus.processing)
-                              Container(color: AppTheme.bgDark.withValues(alpha: 0.7),
-                                  child: Center(child: CircularProgressIndicator(color: AppTheme.teal, strokeWidth: 2))),
+                              Container(
+                                color: AppTheme.bgDark.withValues(alpha: 0.7),
+                                child: const Center(child: CircularProgressIndicator(color: AppTheme.teal, strokeWidth: 2)),
+                              ),
                           ])
-                        : _Placeholder(icon: Icons.camera_alt_rounded, line1: 'कैमरा खोलें', line2: 'Point camera at text or digits'),
+                        : const _Placeholder(
+                            icon: Icons.camera_alt_rounded,
+                            line1: 'Open Camera',
+                            line2: 'Point camera at text or digits',
+                          ),
                   ),
                 ).animate().fadeIn().scale(begin: const Offset(0.97, 0.97)),
               ),
@@ -66,12 +85,12 @@ class _CameraScreenState extends State<CameraScreen> {
               Row(
                 children: [
                   if (_capturedPath != null) ...[
-                    _OutlineBtn(icon: Icons.refresh_rounded, label: 'दोबारा', onTap: () => _reset(state)),
+                    _OutlineBtn(icon: Icons.refresh_rounded, label: 'Reset', onTap: () => _reset(state)),
                     const SizedBox(width: 12),
                   ],
                   Expanded(child: _GoldBtn(
                     icon: Icons.camera_alt_rounded,
-                    label: _capturedPath == null ? 'कैमरा  ·  Open Camera' : 'फिर खींचें  ·  Retake',
+                    label: _capturedPath == null ? 'Open Camera' : 'Retake',
                     isLoading: state.status == RecognitionStatus.processing,
                     onTap: () => _capture(context),
                   )),
@@ -79,9 +98,13 @@ class _CameraScreenState extends State<CameraScreen> {
               ).animate().fadeIn(delay: 150.ms).slideY(begin: 0.2),
               const SizedBox(height: 14),
               if (state.hasResults || state.status == RecognitionStatus.error)
-                Expanded(flex: 2,
-                  child: ResultsPanel(results: state.results, status: state.status, errorMessage: state.errorMessage, isDigitMode: state.isDigitMode)
-                      .animate().fadeIn().slideY(begin: 0.3)),
+                Expanded(
+                  flex: 2,
+                  child: ResultsPanel(
+                    results: state.results, status: state.status,
+                    errorMessage: state.errorMessage, isDigitMode: state.isDigitMode,
+                  ).animate().fadeIn().slideY(begin: 0.3),
+                ),
               const SizedBox(height: 8),
             ],
           ),
@@ -97,42 +120,57 @@ class _Placeholder extends StatelessWidget {
   const _Placeholder({required this.icon, required this.line1, required this.line2});
 
   @override
-  Widget build(BuildContext context) => Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-    Icon(icon, size: 52, color: AppTheme.gold.withValues(alpha: 0.25)),
-    const SizedBox(height: 12),
-    Text(line1, style: const TextStyle(fontFamily: 'Tiro', color: AppTheme.textSub, fontSize: 15)),
-    const SizedBox(height: 4),
-    Text(line2, style: TextStyle(fontSize: 11, color: AppTheme.textSub.withValues(alpha: 0.5))),
-  ]));
+  Widget build(BuildContext context) => Center(
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      Icon(icon, size: 52, color: AppTheme.gold.withValues(alpha: 0.25)),
+      const SizedBox(height: 12),
+      Text(line1, style: const TextStyle(fontFamily: 'Tiro', color: AppTheme.textSub, fontSize: 15)),
+      const SizedBox(height: 4),
+      Text(line2, style: TextStyle(fontSize: 11, color: AppTheme.textSub.withValues(alpha: 0.5))),
+    ]),
+  );
 }
 
 class _OutlineBtn extends StatelessWidget {
   final IconData icon; final String label; final VoidCallback onTap;
   const _OutlineBtn({required this.icon, required this.label, required this.onTap});
   @override
-  Widget build(BuildContext context) => GestureDetector(onTap: onTap,
-    child: Container(padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), border: Border.all(color: AppTheme.borderGold)),
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.borderGold),
+      ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 18, color: AppTheme.textSub),
         const SizedBox(width: 6),
         Text(label, style: const TextStyle(fontFamily: 'Tiro', color: AppTheme.textSub, fontWeight: FontWeight.w600)),
-      ])));
+      ]),
+    ),
+  );
 }
 
 class _GoldBtn extends StatelessWidget {
   final IconData icon; final String label; final bool isLoading; final VoidCallback onTap;
   const _GoldBtn({required this.icon, required this.label, required this.isLoading, required this.onTap});
   @override
-  Widget build(BuildContext context) => GestureDetector(onTap: isLoading ? null : onTap,
-    child: Container(padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(gradient: AppTheme.goldGradient, borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: AppTheme.gold.withValues(alpha: 0.3), blurRadius: 18, offset: const Offset(0, 6))]),
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: isLoading ? null : onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: AppTheme.gold, // flat matte — was goldGradient
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: Center(child: isLoading
-          ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.bgDark))
+          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.bgDark))
           : Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(icon, size: 17, color: AppTheme.bgDark),
               const SizedBox(width: 8),
               Text(label, style: const TextStyle(fontFamily: 'Tiro', fontWeight: FontWeight.w700, fontSize: 13, color: AppTheme.bgDark)),
-            ]))));
+            ])),
+    ),
+  );
 }

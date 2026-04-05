@@ -32,7 +32,7 @@ class _CanvasPainter extends CustomPainter {
     _drawBorderOrnament(canvas, size);
     if (points.isEmpty) return;
 
-    // Glow layer
+    // Subtle glow layer
     final glowPaint = Paint()
       ..color = AppTheme.teal.withValues(alpha: 0.2)
       ..strokeWidth = 16
@@ -41,7 +41,7 @@ class _CanvasPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
 
-    // Main stroke — gold
+    // Main stroke — matte gold (solid, no gradient)
     final paint = Paint()
       ..color = AppTheme.gold
       ..strokeWidth = 5
@@ -64,7 +64,10 @@ class _CanvasPainter extends CustomPainter {
         pathOpen = true;
       } else {
         if (i + 1 < points.length && !points[i + 1].isStart) {
-          final mid = Offset((p.offset.dx + points[i + 1].offset.dx) / 2, (p.offset.dy + points[i + 1].offset.dy) / 2);
+          final mid = Offset(
+            (p.offset.dx + points[i + 1].offset.dx) / 2,
+            (p.offset.dy + points[i + 1].offset.dy) / 2,
+          );
           path.quadraticBezierTo(p.offset.dx, p.offset.dy, mid.dx, mid.dy);
         } else {
           path.lineTo(p.offset.dx, p.offset.dy);
@@ -89,7 +92,6 @@ class _CanvasPainter extends CustomPainter {
   }
 
   void _drawBorderOrnament(Canvas canvas, Size size) {
-    // Subtle corner lines — traditional frame motif
     final linePaint = Paint()
       ..color = AppTheme.gold.withValues(alpha: 0.18)
       ..strokeWidth = 1.0

@@ -10,7 +10,13 @@ class ResultsPanel extends StatelessWidget {
   final String? errorMessage;
   final bool isDigitMode;
 
-  const ResultsPanel({super.key, required this.results, required this.status, required this.errorMessage, required this.isDigitMode});
+  const ResultsPanel({
+    super.key,
+    required this.results,
+    required this.status,
+    required this.errorMessage,
+    required this.isDigitMode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +27,14 @@ class ResultsPanel extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: AppTheme.bgCard, // flat matte — was cardGradient
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppTheme.borderGold, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header with ornamental top bar ──────────────────────────
+          // ── Header ──────────────────────────────────────────────────
           Container(
             decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: AppTheme.borderGold, width: 0.5)),
@@ -38,11 +44,15 @@ class ResultsPanel extends StatelessWidget {
               children: [
                 Text('✦', style: TextStyle(color: AppTheme.gold.withValues(alpha: 0.7), fontSize: 10)),
                 const SizedBox(width: 8),
-                const Text('परिणाम  ·  RESULT',
-                    style: TextStyle(fontFamily: 'Tiro', fontSize: 10, color: AppTheme.textSub, letterSpacing: 2)),
+                const Text(
+                  'RESULT',
+                  style: TextStyle(fontFamily: 'Tiro', fontSize: 10, color: AppTheme.textSub, letterSpacing: 2),
+                ),
                 const Spacer(),
-                Text('${results.length} candidate${results.length > 1 ? 's' : ''}',
-                    style: const TextStyle(fontSize: 10, color: AppTheme.textSub)),
+                Text(
+                  '${results.length} candidate${results.length > 1 ? 's' : ''}',
+                  style: const TextStyle(fontSize: 10, color: AppTheme.textSub),
+                ),
               ],
             ),
           ),
@@ -117,7 +127,10 @@ class _ConfidenceBadge extends StatelessWidget {
           '${(confidence * 100).toStringAsFixed(0)}%',
           style: TextStyle(fontFamily: 'Tiro', fontSize: 24, fontWeight: FontWeight.w700, color: _color),
         ),
-        Text('विश्वास', style: TextStyle(fontFamily: 'Tiro', fontSize: 10, color: AppTheme.textSub, letterSpacing: 0.5)),
+        const Text(
+          'Confidence',
+          style: TextStyle(fontFamily: 'Tiro', fontSize: 10, color: AppTheme.textSub, letterSpacing: 0.5),
+        ),
       ],
     );
   }
@@ -141,11 +154,20 @@ class _CandidateTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: AppTheme.borderGold),
             ),
-            child: Center(child: Text('$index', style: const TextStyle(fontFamily: 'Tiro', fontSize: 10, color: AppTheme.textSub))),
+            child: Center(
+              child: Text('$index', style: const TextStyle(fontFamily: 'Tiro', fontSize: 10, color: AppTheme.textSub)),
+            ),
           ),
           const SizedBox(width: 10),
-          Expanded(child: Text(result.label, style: const TextStyle(fontFamily: 'Tiro', fontSize: 15, color: AppTheme.cream), overflow: TextOverflow.ellipsis)),
-          Text('${(result.confidence * 100).toStringAsFixed(0)}%', style: const TextStyle(fontFamily: 'Tiro', fontSize: 11, color: AppTheme.textSub)),
+          Expanded(
+            child: Text(result.label,
+                style: const TextStyle(fontFamily: 'Tiro', fontSize: 15, color: AppTheme.cream),
+                overflow: TextOverflow.ellipsis),
+          ),
+          Text(
+            '${(result.confidence * 100).toStringAsFixed(0)}%',
+            style: const TextStyle(fontFamily: 'Tiro', fontSize: 11, color: AppTheme.textSub),
+          ),
         ],
       ),
     );
@@ -167,9 +189,14 @@ class _ErrorCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline_rounded, color: AppTheme.error, size: 20),
+          const Icon(Icons.error_outline_rounded, color: AppTheme.error, size: 20),
           const SizedBox(width: 12),
-          Expanded(child: Text(message, style: TextStyle(fontFamily: 'Tiro', color: AppTheme.error.withValues(alpha: 0.9), fontSize: 13))),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(fontFamily: 'Tiro', color: AppTheme.error.withValues(alpha: 0.9), fontSize: 13),
+            ),
+          ),
         ],
       ),
     ).animate().fadeIn().shake(hz: 2, offset: const Offset(4, 0));

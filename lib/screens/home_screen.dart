@@ -63,9 +63,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     const SizedBox(height: 12),
 
                     // Type toggle
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const TypeToggle(),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: TypeToggle(),
                     ).animate().fadeIn(delay: 200.ms).slideY(begin: -0.2),
 
                     const SizedBox(height: 12),
@@ -117,22 +117,18 @@ class _AksharHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
       child: Row(
         children: [
-          // Logo — lotus-inspired medallion
+          // Logo — flat matte medallion (was gradient)
           Container(
             width: 48,
             height: 48,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: [AppTheme.teal, AppTheme.gold],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppTheme.teal,
               border: Border.all(color: AppTheme.gold.withValues(alpha: 0.5), width: 1.5),
             ),
             child: const Center(
               child: Text(
-                'अ',
+                'A',
                 style: TextStyle(
                   fontFamily: 'Tiro',
                   fontSize: 24,
@@ -160,7 +156,7 @@ class _AksharHeader extends StatelessWidget {
                 ),
               ),
               Text(
-                'अक्षर  ·  Script Recognition',
+                'Script Recognition',
                 style: TextStyle(
                   fontSize: 11,
                   color: AppTheme.gold.withValues(alpha: 0.8),
@@ -172,7 +168,7 @@ class _AksharHeader extends StatelessWidget {
 
           const Spacer(),
 
-          // Live badge — styled in teal
+          // Live badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
@@ -217,7 +213,7 @@ class _OrnamentalDivider extends StatelessWidget {
   }
 }
 
-// ── Traditional Background ────────────────────────────────────────────────────
+// ── Traditional Background — flat matte, no gradient shaders ─────────────────
 
 class _TraditionalBackground extends StatelessWidget {
   const _TraditionalBackground();
@@ -234,23 +230,7 @@ class _TraditionalBackground extends StatelessWidget {
 class _PatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    // Subtle radial glow top-center (teal)
-    final tealPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [AppTheme.teal.withValues(alpha: 0.08), Colors.transparent],
-        stops: const [0, 1],
-      ).createShader(Rect.fromCircle(center: Offset(size.width / 2, 0), radius: size.width * 0.7));
-    canvas.drawCircle(Offset(size.width / 2, 0), size.width * 0.7, tealPaint);
-
-    // Warm glow bottom-right (gold)
-    final goldPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [AppTheme.gold.withValues(alpha: 0.06), Colors.transparent],
-        stops: const [0, 1],
-      ).createShader(Rect.fromCircle(center: Offset(size.width, size.height), radius: size.width * 0.6));
-    canvas.drawCircle(Offset(size.width, size.height), size.width * 0.6, goldPaint);
-
-    // Subtle corner dots — traditional rangoli motif
+    // Subtle dot grid — rangoli motif (matte, no gradient)
     final dotPaint = Paint()..color = AppTheme.gold.withValues(alpha: 0.06);
     const spacing = 32.0;
     for (double x = spacing; x < size.width; x += spacing) {
@@ -258,6 +238,14 @@ class _PatternPainter extends CustomPainter {
         canvas.drawCircle(Offset(x, y), 1.0, dotPaint);
       }
     }
+
+    // Subtle flat tint at top — teal
+    final tealPaint = Paint()..color = AppTheme.teal.withValues(alpha: 0.04);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height * 0.3), tealPaint);
+
+    // Subtle flat tint at bottom — gold
+    final goldPaint = Paint()..color = AppTheme.gold.withValues(alpha: 0.03);
+    canvas.drawRect(Rect.fromLTWH(0, size.height * 0.7, size.width, size.height * 0.3), goldPaint);
   }
 
   @override

@@ -21,7 +21,7 @@ class _DrawScreenState extends State<DrawScreen> {
     final state = context.read<RecognitionState>();
     if (state.drawPoints.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('पहले लिखें — Draw something first!', style: TextStyle(fontFamily: 'Tiro')),
+        content: const Text('Draw something first!', style: TextStyle(fontFamily: 'Tiro')),
         backgroundColor: AppTheme.bgSurface,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -34,8 +34,11 @@ class _DrawScreenState extends State<DrawScreen> {
       final results = await RecognitionService.instance.recognizeDrawn(
         points: state.drawPoints, isDigitMode: state.isDigitMode, canvasSize: size,
       );
-      if (results.isEmpty) state.setError('पहचान नहीं हुई — Nothing recognized. Try again!');
-      else state.setResults(results);
+      if (results.isEmpty) {
+        state.setError('Nothing recognized. Try again!');
+      } else {
+        state.setResults(results);
+      }
     } catch (e) {
       state.setError('Error: $e');
     }
@@ -55,7 +58,7 @@ class _DrawScreenState extends State<DrawScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    gradient: AppTheme.cardGradient,
+                    color: AppTheme.bgCard, // flat matte — was cardGradient
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: state.status == RecognitionStatus.processing
@@ -83,9 +86,14 @@ class _DrawScreenState extends State<DrawScreen> {
                                 Text('✍', style: TextStyle(fontSize: 40, color: AppTheme.gold.withValues(alpha: 0.3))),
                                 const SizedBox(height: 10),
                                 Text(
-                                  state.isDigitMode ? 'अंक लिखें\nDraw a digit' : 'अक्षर लिखें\nWrite text',
+                                  state.isDigitMode ? 'Draw a digit' : 'Write text here',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontFamily: 'Tiro', color: AppTheme.textSub.withValues(alpha: 0.5), fontSize: 14, height: 1.6),
+                                  style: TextStyle(
+                                    fontFamily: 'Tiro',
+                                    color: AppTheme.textSub.withValues(alpha: 0.5),
+                                    fontSize: 14,
+                                    height: 1.6,
+                                  ),
                                 ),
                               ],
                             ),
@@ -103,7 +111,7 @@ class _DrawScreenState extends State<DrawScreen> {
               // ── Buttons ─────────────────────────────────────────────
               Row(
                 children: [
-                  _OutlineBtn(icon: Icons.refresh_rounded, label: 'मिटाएं', onTap: state.clearDrawing),
+                  _OutlineBtn(icon: Icons.refresh_rounded, label: 'Clear', onTap: state.clearDrawing),
                   const SizedBox(width: 12),
                   Expanded(child: _PrimaryBtn(
                     isLoading: state.status == RecognitionStatus.processing,
@@ -137,13 +145,13 @@ class _ProcessingOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppTheme.bgDark.withValues(alpha: 0.7),
-      child: Center(
+      child: const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(width: 36, height: 36, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.teal)),
-            const SizedBox(height: 14),
-            const Text('विश्लेषण…', style: TextStyle(fontFamily: 'Tiro', fontSize: 14, color: AppTheme.teal, letterSpacing: 1.5)),
+            SizedBox(height: 14),
+            Text('Analysing…', style: TextStyle(fontFamily: 'Tiro', fontSize: 14, color: AppTheme.teal, letterSpacing: 1.5)),
           ],
         ),
       ),
@@ -162,7 +170,10 @@ class _OutlineBtn extends StatelessWidget {
     onTap: onTap,
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), border: Border.all(color: AppTheme.borderGold)),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.borderGold),
+      ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 18, color: AppTheme.textSub),
         const SizedBox(width: 6),
@@ -184,18 +195,19 @@ class _PrimaryBtn extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        gradient: isLoading ? null : AppTheme.goldGradient,
-        color: isLoading ? AppTheme.bgSurface : null,
+        // Flat matte gold — was goldGradient
+        color: isLoading ? AppTheme.bgSurface : AppTheme.gold,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: isLoading ? [] : [BoxShadow(color: AppTheme.gold.withValues(alpha: 0.3), blurRadius: 18, offset: const Offset(0, 6))],
       ),
       child: Center(child: isLoading
-          ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.teal))
+          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.teal))
           : const Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.auto_awesome_rounded, size: 17, color: AppTheme.bgDark),
               SizedBox(width: 8),
-              Text('पहचानें  ·  Recognize',
-                  style: TextStyle(fontFamily: 'Tiro', fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.bgDark, letterSpacing: 0.5)),
+              Text(
+                'Recognize',
+                style: TextStyle(fontFamily: 'Tiro', fontWeight: FontWeight.w700, fontSize: 14, color: AppTheme.bgDark, letterSpacing: 0.5),
+              ),
             ])),
     ),
   );
